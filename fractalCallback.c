@@ -71,6 +71,24 @@ int rutlStart (pChar value, parseInfo_t info)
     return ok;   
 }
 
+
+/* rutlEnd
+ *
+ * funcion que indica si el string recibido corresponde a una longitud de base valida
+ * (0 a 100). Si el string no contiene un numero o el numero se excede del rango
+ * permitido, se informa al usuario. Si por el contrario, el numero es valido,
+ * guarda en la estructura de comunicacion con el main siempre y cuando no haya
+ * nada guardado en su lugar
+ *
+ * Recibe:
+ * value: puntero a string a analizar
+ * parseInfo_t info: estructura para almacenar datos
+ *
+ * Devuelve:
+ * true (1) si el valor del string es valido
+ * falso (0) si el string o su valor es invalido
+ */
+
 int rutlEnd (pChar value, parseInfo_t info)
 {
     if(info.modo = MANDELBROT || info.modo = NOMODE) //si se establecio un modo incompatible con lEnd
