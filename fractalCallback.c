@@ -53,23 +53,66 @@ int rutlConstant (pChar value, parseInfo_t info)
     return ok;
 }
 
+/* rutlStart
+ *
+ * funcion que indica si el string recibido corresponde a una longitud de lado valida
+ * (0 a 100). Si el string no contiene un numero o el numero se excede del rango
+ * permitido, se informa al usuario. Si por el contrario, el numero es valido,
+ * guarda en la estructura de comunicacion con el main siempre y cuando no haya
+ * nada guardado en su lugar
+ *
+ * Recibe:
+ * value: puntero a string a analizar
+ * parseInfo_t info: estructura para almacenar datos
+ *
+ * Devuelve:
+ * true (1) si el valor del string es valido
+ * falso (0) si el string o su valor es invalido
+ */
+
+
 int rutlStart (pChar value, parseInfo_t info)
 {
-    int validarnumeros;
-    int ok= true;
-    validarnumeros = rutValidacion (value); //analiza que el string ingresado sea todo de numeros
-    if (rutDatosNumericos)
+    
+    if(info.modo == MANDELBROT || info.modo == NOMODE) //si se establecio un modo incompatible con lStart
     {
-        ok=false;
-        printf("Error \n");
+        fprintf(stderr, "Error, solo puede invocarse -lStart una vez establecido el modo \
+                en triangulo con '-type UNIFORME'\
+                o en poligono con '-type POLIGONO'\n");
+        return false;
     }
-    else if (atof (value) > 100 || atof (value) <= 0)
+    else if (info.poligono.lStart)//si lStart no esta vacio (funciona tanto para parsePoligono_t\
+        como para parseTriangulo_t porque lStart se encuentra en la\
+        misma posicion en ambas estructuras)
     {
-        ok= false;
-        printf("Error \n");
+        fprintf(stderr,"Error: -lStart invocado mas de una vez\n");
+        return false;
     }
-    return ok;   
+    
+    else //si se establecio un modo compatible y lStart esta vacio
+    {
+        if (!rutValidacion(value)) //si se ingreso un valor no numerico
+        {
+            fprintf(stderr, "Error: angulo %s* con valor no numerico\n", value);
+            return false;
+        }
+        else //si se ingreso un valor numerico
+        {
+            float length = atof(value);
+            if ( length >= 100 || length <= 0) //si el valor numerico esta fuera de rango
+            {
+                fprintf(stderr, "Error: lStart %s no se encuentra en el rango indicado (0 a 100)", value);
+                return false;
+            }
+            else    //si el valor ingresado es correcto
+            {
+                info.poligono.lStart = length; //nuevamente, funciona tambien para modo uniforme
+                return true;
+            }
+        }
+    }
 }
+
 
 int rutlEnd (pChar value, parseInfo_t info)
 {
