@@ -63,7 +63,7 @@ int rutlStart (pChar value, parseInfo_t info)
         ok=false;
         printf("Error \n");
     }
-    else if (atof (value) > 100 || atof (value) <= 0)
+    else if (atof (value) >= 100 || atof (value) <= 0)
     {
         ok= false;
         printf("Error \n");
