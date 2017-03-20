@@ -73,7 +73,7 @@ int rutlStart (pChar value, parseInfo_t info)
 
 int rutlEnd (pChar value, parseInfo_t info)
 {
-    if(info.modo = MANDELBROT || info.modo = NOMODE) //si se establecio un modo incompatible con lEnd
+    if(info.modo == MANDELBROT || info.modo == NOMODE) //si se establecio un modo incompatible con lEnd
     {
         fprintf(stderr, "Error, solo puede invocarse -lEnd una vez establecido el modo \
                         en triangulo con '-type UNIFORME'\
@@ -306,30 +306,68 @@ int rutType (pChar value, parseInfo_t info)
 }
 
  /* rutValidacion
-  * 
-  * funcion que analiza que el string ingresado corresponda a un numero, tanto 
-  * positivo como negativo. Admite numeros con decimales.
-  * 
-  * Recibe:
-  * value: puntero al string a analizar
-  * parseInfo_t info: estructura para almacenar datos
-  * 
-  * Devuelve
-  * false(0) si no es un numero
-  * true(1) si es numero
-  */
+ *
+ * funcion que analiza que el string ingresado corresponda a un numero, tanto
+ * positivo como negativo. Admite numeros con decimales.
+ *
+ * Recibe:
+ * value: puntero al string a analizar
+ * parseInfo_t info: estructura para almacenar datos
+ *
+ * Devuelve
+ * false(0) si no es un numero
+ * true(1) si es numero
+ */
 int rutValidacion(pChar value)
 {
-     unsigned long i = strlen(value), j = 0;
-    
-    //analizar todos los caracteres desde 0 hasta i
-    while (j< i)    
+    unsigned long i = strlen(value), j = 0, dotPosition=0;
+    int floatnum= false;
+ 
+    //analizar todos los caracteres desde 0 hasta i buscando el '.' en el caso de que sea float.
+    while (j<i)
     {
-        //caracteres aceptados: numeros en cualquier lugar y '-' solo en primera posicion
-        if ( isdigit(value[j]) || ( value[0] == '-' && j == 0 ) )
-            j++;
-        else
-            return false;
+        if (value[j]=='.')
+        {
+            floatnum= true ; // cuando encuentra al menos un '.' se considera float
+            dotPosition=j; // despues analizara si existe mas de uno, lo que se considera invalido.
+        }
+        j++;
     }
-    return true; 
+    
+    j=0; // resetea el contador
+    
+    
+    if (floatnum!= true) //si el numero NO es float
+    {
+        while (j< i) //analizar todos los caracteres desde 0 hasta i
+        {
+            //caracteres aceptados: numeros en cualquier lugar y '-' solo en primera posicion
+            if ( isdigit(value[j]) || ( value[0] == '-' && j == 0 ) )
+                j++;
+            else
+                return false;
+        }
+        
+        
+    }
+    
+   
+    
+    else // si el numero es float
+        {
+        
+        
+            while (j< i)
+            {
+                //caracteres aceptados: numeros en cualquier lugar, '-' solo en la primera posicion
+                // y un '.' en la posicion 'dotPosition'
+                if ( isdigit(value[j])|| (value[0] == '-' && j==0) || (value [dotPosition]=='.' && j== dotPosition))
+                    j++;
+                else    
+                    return false;
+            }
+        }
+    
+    return true;
 }
+
