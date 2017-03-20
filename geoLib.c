@@ -6,6 +6,7 @@
  * 
  * Recibe:
  * polygon_t poly: poligono a dibujar
+ * baseColor_t: color usado como "seed" para el color final de las aristas.
  */
 void drawPolygon(polygon_t poly, ALLEGRO_COLOR  baseColor)
 {   
@@ -152,7 +153,7 @@ float calcDistance(cardPoint_t a, cardPoint_t b)
  */
 ALLEGRO_COLOR fadeColor(ALLEGRO_COLOR baseColor, cardPoint_t p)
 {
-    return (al_map_rgb( baseColor.r*255*p.x/D_WIDTH, 
-                        baseColor.g*255*p.x/D_WIDTH, 
+    return (al_map_rgb( baseColor.r,//*255*p.x/D_WIDTH, 
+                        baseColor.g*255*(D_WIDTH - p.x)/D_WIDTH, 
                         baseColor.b*255*p.x/D_WIDTH ));
 }
