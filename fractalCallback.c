@@ -105,6 +105,7 @@ int rutlEnd (pChar value, parseInfo_t info)
             else    //si el valor ingresado es correcto
             {
                 info.poligono.lEnd = length; //nuevamente, funciona tambien para modo uniforme
+                return true;
             }
         }
     }  
